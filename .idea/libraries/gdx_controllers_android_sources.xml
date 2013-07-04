@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="gdx-controllers-android-sources">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/MusicMunchers/libs/gdx-controllers-android-sources.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -6,19 +6,21 @@ import org.andengine.entity.scene.menu.animator.AlphaMenuSceneAnimator;
 import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.scene.menu.item.TextMenuItem;
 import org.andengine.entity.scene.menu.item.decorator.ColorMenuItemDecorator;
+import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.util.adt.color.Color;
 
-import android.util.Log;
-
 import com.ursarage.musicmunchers.SceneManager.SceneType;
+
+import android.util.Log;
 
 public class MainMenuScene extends BaseScene  implements IOnMenuItemClickListener {
 
 	private Text titleText;
 	
 	private MenuScene menuScene;
-	
+
+    public Sprite mMuncher;
 	static final int MENU_PLAY = 0;
 	
 	@Override
@@ -35,7 +37,16 @@ public class MainMenuScene extends BaseScene  implements IOnMenuItemClickListene
 		menuScene.setOnMenuItemClickListener(this);
 		
 		setChildScene(menuScene, false, true, true);
-	}
+
+        mMuncher = new Sprite(315, 260, resourcesManager.mMenuMuncherTextureRegion, this.vertexBufferObjectManager);
+
+        attachChild(mMuncher);
+        if( resourcesManager.ouya.isRunningOnOUYAHardware())
+        {
+            // TOdo something here
+        }
+        Log.d("touch", "is it crashing here?");
+     }
 
 	@Override
 	public void onBackKeyPressed() {
@@ -64,4 +75,10 @@ public class MainMenuScene extends BaseScene  implements IOnMenuItemClickListene
 		}
 	}
 
+    /**@Override
+    public boolean onGenericMotionEvent(final MotionEvent event)
+    {
+        int playerNum = OuyaController.getPlayerNumByDeviceId(event.getDeviceId());
+        return true;
+    }**/
 }

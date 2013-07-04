@@ -11,17 +11,13 @@ import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
-import org.andengine.entity.util.FPSLogger;
 import org.andengine.ui.activity.BaseGameActivity;
 
-import android.annotation.SuppressLint;
-import android.graphics.Point;
-import android.util.DisplayMetrics;
-import android.view.Display;
+import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.ursarage.ouyamediator.OuyaMediator;
 /**
  * (c) 2013 Ursa Rage
  *
@@ -43,6 +39,7 @@ public class MunchersGameActivity extends BaseGameActivity implements  MusicMunc
 
     private ScaleRepository repository = new ScaleRepository();
     private ResourceManager resourcesManager;
+    private OuyaMediator mOuyaMediator;
 
     // ===========================================================
     // Constructors
@@ -55,6 +52,12 @@ public class MunchersGameActivity extends BaseGameActivity implements  MusicMunc
     // ===========================================================
     // Methods for/from SuperClass/Interfaces
     // ===========================================================
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        mOuyaMediator = new OuyaMediator(this);
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public Engine onCreateEngine(EngineOptions pEngineOptions) {
@@ -73,7 +76,6 @@ public class MunchersGameActivity extends BaseGameActivity implements  MusicMunc
 
     @Override
     public void onCreateResources(OnCreateResourcesCallback  pOnCreateResourcesCallback) throws IOException {
-
         ResourceManager.prepareManager(mEngine, this,mCamera, getVertexBufferObjectManager());
         resourcesManager = ResourceManager.getInstance();
         pOnCreateResourcesCallback.onCreateResourcesFinished();

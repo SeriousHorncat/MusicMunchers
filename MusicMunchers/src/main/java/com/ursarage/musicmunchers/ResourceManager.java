@@ -7,18 +7,13 @@ import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
-import org.andengine.opengl.texture.atlas.bitmap.BuildableBitmapTextureAtlas;
-import org.andengine.opengl.texture.atlas.bitmap.source.IBitmapTextureAtlasSource;
-import org.andengine.opengl.texture.atlas.buildable.builder.BlackPawnTextureAtlasBuilder;
-import org.andengine.opengl.texture.atlas.buildable.builder.ITextureAtlasBuilder.TextureAtlasBuilderException;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
-import org.andengine.util.debug.Debug;
 
 import android.graphics.Color;
 import android.util.Log;
 
-import com.ursarage.musicmunchers.MunchersGameActivity;
+import tv.ouya.console.api.OuyaFacade;
 
 public class ResourceManager implements  MusicMuncherDefines {
 
@@ -28,6 +23,7 @@ public class ResourceManager implements  MusicMuncherDefines {
 	public MunchersGameActivity activity;
 	public Camera camera;
 	public VertexBufferObjectManager vertexBufferObjectManager;
+    public OuyaFacade ouya;
 	
 	/** 
 	 * Splash Resources
@@ -40,6 +36,9 @@ public class ResourceManager implements  MusicMuncherDefines {
 	 */
 	public Font titleFont;
 	public Font menuItemFont;
+
+    private BitmapTextureAtlas mMenuMuncherBitmapTextureAtlas;
+    protected ITextureRegion mMenuMuncherTextureRegion;
 	
 	/**
 	 * Game Level Resources
@@ -75,6 +74,12 @@ public class ResourceManager implements  MusicMuncherDefines {
 		menuItemFont = FontFactory.createFromAsset(activity.getFontManager(), activity.getTextureManager(), 512, 512, TextureOptions.BILINEAR
 				, activity.getAssets(), "VTSR.TTF", 28, true, Color.GREEN);
 		menuItemFont.load();
+
+        BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
+        this.mMenuMuncherBitmapTextureAtlas = new BitmapTextureAtlas(activity.getTextureManager(), CELL_WIDTH, CELL_HEIGHT, TextureOptions.BILINEAR);
+        this.mMenuMuncherTextureRegion =
+                BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mMenuMuncherBitmapTextureAtlas, activity, "musicmuncher.png", 0, 0);
+        this.mMenuMuncherBitmapTextureAtlas.load();
 
 	}
 	
@@ -127,6 +132,9 @@ public class ResourceManager implements  MusicMuncherDefines {
         getInstance().activity = activity;
         getInstance().camera = camera;
         getInstance().vertexBufferObjectManager = vbom;
+        getInstance().ouya = OuyaFacade.getInstance();
+
+        Log.d("touch", "IS USING OUYA: " + getInstance().ouya.isRunningOnOUYAHardware());
     }
     
     //---------------------------------------------
