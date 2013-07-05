@@ -71,33 +71,20 @@ public class ScaleRepository {
 
     public static boolean doesScaleContains( String scaleName, String note) {
     	List<String> scale = scales_.get(scaleName);
-    	
     	return scale.contains(note);
     }
     
     public static String RandomNote()
     {
-    	Log.d("touch", "Beggning of randomnote");
       String[] scaleNames = scales_.keySet().toArray(new String[0]);
-      Log.d("touch", "got list of scale names of size "  + scaleNames.length);
       String scaleName = scaleNames[ random.nextInt(scaleNames.length) ];
-
-      Log.d("touch", "scale chosen for random note" + scaleName );
-      
-     // return "A";
       return RandomNote(scaleName);
     }
 
     public static String RandomNote(String scaleName)
     {
-    	 Log.d("touch", " beggingin of random note for certain scale" );
       List<String> scale = scales_.get(scaleName);
-      
-      Log.d("touch", "retireved scale" );
 	  String note = scale.get( random.nextInt(scale.size()));
-	  
-      Log.d("touch", "note chosen" + note );
-	  //return "A";
       return note;
     }
 }

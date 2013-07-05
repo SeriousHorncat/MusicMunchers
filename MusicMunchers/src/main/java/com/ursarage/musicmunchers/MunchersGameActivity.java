@@ -28,8 +28,8 @@ public class MunchersGameActivity extends BaseGameActivity implements  MusicMunc
     // Constants
     // ===========================================================
 
-    protected static final int CAMERA_WIDTH = 800;
-    protected static final int CAMERA_HEIGHT = 500;
+    protected static final int CAMERA_WIDTH = 960;
+    protected static final int CAMERA_HEIGHT = 540;
 
     // ===========================================================
     // Fields

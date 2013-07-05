@@ -18,13 +18,12 @@ import tv.ouya.console.api.OuyaController;
 
 public class Gameboard extends Rectangle implements MusicMuncherDefines, IOuyaControllerListener {
 	
-	final int BOARD_PADDING = 50;
-	
+
 	int numberOfCellsWidth;
 	int numberOfCellsHeight;
 	
 	String scaleName;
-	int totalNoteCount = 0;
+	private int totalNoteCount = 0;
 	
 	List<BoardPiece> pieces;
 	
@@ -39,14 +38,17 @@ public class Gameboard extends Rectangle implements MusicMuncherDefines, IOuyaCo
 		
 		level = levelScene;
 		scaleName = scale;
-		numberOfCellsWidth = ((int)camera.getWidth() - (BOARD_PADDING*2)) / CELL_WIDTH;
-		numberOfCellsHeight = ((int)camera.getHeight() - (BOARD_PADDING*2)) / CELL_HEIGHT;
+
+		numberOfCellsWidth = ((int)camera.getWidth() - (levelScene.BOARD_PADDING_PERCENT*2)) / CELL_WIDTH;
+		numberOfCellsHeight = ((int)camera.getHeight() - (levelScene.BOARD_PADDING_PERCENT*2)) / CELL_HEIGHT;
+
+        Log.d("touch", "Width: " + numberOfCellsWidth  +    "-    Height: " + numberOfCellsHeight);
 		
-		int gameboardWidth = (int)camera.getWidth() - (BOARD_PADDING*2);
-		int gameboardHeight = (int)camera.getHeight() - (BOARD_PADDING*2);
+		int gameboardWidth = levelScene.maxGameboardWidth - (levelScene.BOARD_PADDING_PERCENT*2);
+		int gameboardHeight = levelScene.maxGameboardHeight - (levelScene.BOARD_PADDING_PERCENT*2);
 		
-	    int initialBoardPositionX = 3 + BOARD_PADDING;
-	    int initialBoardPositiony = 75 + BOARD_PADDING;
+	    int initialBoardPositionX = levelScene.levelPaddingWidth;
+	    int initialBoardPositiony = levelScene.levelPaddingHeight;
 	      
 	    int pieceX = initialBoardPositionX;
 	    int pieceY = initialBoardPositiony;
@@ -67,19 +69,8 @@ public class Gameboard extends Rectangle implements MusicMuncherDefines, IOuyaCo
 			}
 			pieceX += CELL_WIDTH -2;
 		}
-		
-		for(int index = 0; index < pieces.size(); index++)
-		{
-			if( ScaleRepository.doesScaleContains(scaleName, pieces.get(index).text()) )
-			{
-				totalNoteCount += 1;
-			}
-		}
-		
-		random = new Random();
-		int randomCellIndex = random.nextInt(pieces.size() + 1);
-		
-		this.moveMuncher( pieces.get(randomCellIndex) );
+
+		this.moveMuncher( randomBoardPiece() );
 	}
 
 
@@ -165,9 +156,11 @@ public class Gameboard extends Rectangle implements MusicMuncherDefines, IOuyaCo
 	}
 	
 	private String chooseNote( String scale ) {
-		if( random.nextInt(1) == 1 )
-			return ScaleRepository.RandomNote(scale);
-		
+		if( random.nextInt(1) == 1 ){
+            totalNoteCount += 1;
+            return ScaleRepository.RandomNote(scale);
+        }
+
 		return ScaleRepository.RandomNote();
 	}
 	
@@ -177,5 +170,10 @@ public class Gameboard extends Rectangle implements MusicMuncherDefines, IOuyaCo
 		return ( firstSprite.getX()==secondSprite.getX() && 
 				firstSprite.getY()==secondSprite.getY() );
 	}
+
+    private final BoardPiece  randomBoardPiece() {
+        int randomCellIndex = random.nextInt(pieces.size() + 1);
+        return pieces.get(randomCellIndex);
+    }
 
 }
