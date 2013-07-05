@@ -9,8 +9,14 @@ import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.sprite.Sprite;
 
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
 
-public class Gameboard extends Rectangle implements MusicMuncherDefines {
+import com.ursarage.ouyamediator.IOuyaControllerListener;
+
+import tv.ouya.console.api.OuyaController;
+
+public class Gameboard extends Rectangle implements MusicMuncherDefines, IOuyaControllerListener {
 	
 	final int BOARD_PADDING = 50;
 	
@@ -75,7 +81,8 @@ public class Gameboard extends Rectangle implements MusicMuncherDefines {
 		
 		this.moveMuncher( pieces.get(randomCellIndex) );
 	}
-	
+
+
 	public final int score() {
 		return this.score_;
 	}
@@ -111,6 +118,23 @@ public class Gameboard extends Rectangle implements MusicMuncherDefines {
 			this.moveMuncher(pieceTouched);
 		}
 	}
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == OuyaController.BUTTON_DPAD_RIGHT ) {
+            return true;
+        } else if (keyCode == OuyaController.BUTTON_DPAD_LEFT ) {
+            return true;
+        } else if (keyCode == OuyaController.BUTTON_DPAD_DOWN ) {
+
+        }
+        else if ( keyCode == OuyaController.BUTTON_DPAD_UP ) {
+
+        }
+
+        return false;
+    }
 	
 	private boolean isAdjacent(Sprite firstSprite, Sprite secondSprite) {
 		
@@ -153,4 +177,5 @@ public class Gameboard extends Rectangle implements MusicMuncherDefines {
 		return ( firstSprite.getX()==secondSprite.getX() && 
 				firstSprite.getY()==secondSprite.getY() );
 	}
+
 }

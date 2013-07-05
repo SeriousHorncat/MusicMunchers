@@ -11,10 +11,12 @@ import org.andengine.entity.text.Text;
 import org.andengine.util.adt.color.Color;
 
 import com.ursarage.musicmunchers.SceneManager.SceneType;
+import com.ursarage.ouyamediator.IOuyaControllerListener;
 
 import android.util.Log;
+import android.view.KeyEvent;
 
-public class MainMenuScene extends BaseScene  implements IOnMenuItemClickListener {
+public class MainMenuScene extends BaseScene  implements IOnMenuItemClickListener, IOuyaControllerListener {
 
 	private Text titleText;
 	
@@ -43,7 +45,7 @@ public class MainMenuScene extends BaseScene  implements IOnMenuItemClickListene
         attachChild(mMuncher);
         if( resourcesManager.ouya.isRunningOnOUYAHardware())
         {
-            // TOdo something here
+            resourcesManager.ouya.registerListener(this);
         }
         Log.d("touch", "is it crashing here?");
      }
@@ -74,6 +76,16 @@ public class MainMenuScene extends BaseScene  implements IOnMenuItemClickListene
 				return false;
 		}
 	}
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if( SceneManager.getInstance().getCurrentSceneType() == getSceneType()) {
+            SceneManager.getInstance().loadGameScene(engine);
+            return true;
+        }
+
+        return false;
+    }
 
     /**@Override
     public boolean onGenericMotionEvent(final MotionEvent event)

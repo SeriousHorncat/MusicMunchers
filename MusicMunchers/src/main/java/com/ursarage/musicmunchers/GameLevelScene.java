@@ -42,6 +42,8 @@ public class GameLevelScene extends BaseScene {
 		board = new Gameboard( this, camera, mScaleName );
 		Log.w("touch", "made gameboard");
 
+        resourcesManager.ouya.registerListener(board);
+
 		this.mScoreText = new Text(70, 455, resourcesManager.levelText, "Score: " + board.score(), "Score: XXXX".length(), this.vertexBufferObjectManager);
 		
 		Log.w("touch", "Created SCORE TEXT");
@@ -81,8 +83,7 @@ public class GameLevelScene extends BaseScene {
 
 	@Override
 	public void disposeScene() {
-		// TODO Auto-generated method stub
-
+		resourcesManager.ouya.unregisterListener(board);
 	}
 
 }

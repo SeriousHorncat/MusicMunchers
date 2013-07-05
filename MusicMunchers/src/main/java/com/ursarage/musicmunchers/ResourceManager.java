@@ -13,6 +13,8 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import android.graphics.Color;
 import android.util.Log;
 
+import com.ursarage.ouyamediator.OuyaMediator;
+
 import tv.ouya.console.api.OuyaFacade;
 
 public class ResourceManager implements  MusicMuncherDefines {
@@ -23,7 +25,7 @@ public class ResourceManager implements  MusicMuncherDefines {
 	public MunchersGameActivity activity;
 	public Camera camera;
 	public VertexBufferObjectManager vertexBufferObjectManager;
-    public OuyaFacade ouya;
+    public OuyaMediator ouya;
 	
 	/** 
 	 * Splash Resources
@@ -126,13 +128,13 @@ public class ResourceManager implements  MusicMuncherDefines {
 	
 	
 	
-  public static void prepareManager(Engine engine, MunchersGameActivity activity, Camera camera, VertexBufferObjectManager vbom)
+  public static void prepareManager(Engine engine, MunchersGameActivity activity, Camera camera, VertexBufferObjectManager vbom, OuyaMediator ouyaMediator)
     {
         getInstance().engine = engine;
         getInstance().activity = activity;
         getInstance().camera = camera;
         getInstance().vertexBufferObjectManager = vbom;
-        getInstance().ouya = OuyaFacade.getInstance();
+        getInstance().ouya = ouyaMediator;
 
         Log.d("touch", "IS USING OUYA: " + getInstance().ouya.isRunningOnOUYAHardware());
     }

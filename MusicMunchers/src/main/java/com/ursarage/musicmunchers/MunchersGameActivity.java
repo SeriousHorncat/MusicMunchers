@@ -76,7 +76,7 @@ public class MunchersGameActivity extends BaseGameActivity implements  MusicMunc
 
     @Override
     public void onCreateResources(OnCreateResourcesCallback  pOnCreateResourcesCallback) throws IOException {
-        ResourceManager.prepareManager(mEngine, this,mCamera, getVertexBufferObjectManager());
+        ResourceManager.prepareManager(mEngine, this,mCamera, getVertexBufferObjectManager(), mOuyaMediator);
         resourcesManager = ResourceManager.getInstance();
         pOnCreateResourcesCallback.onCreateResourcesFinished();
     }
@@ -125,6 +125,7 @@ public class MunchersGameActivity extends BaseGameActivity implements  MusicMunc
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
+        mOuyaMediator.onKeyDown(keyCode, event);
         if (keyCode == KeyEvent.KEYCODE_BACK)
         {
             SceneManager.getInstance().getCurrentScene().onBackKeyPressed();
