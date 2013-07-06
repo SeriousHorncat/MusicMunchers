@@ -1,7 +1,5 @@
 package com.ursarage.musicmunchers;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import org.andengine.engine.camera.Camera;
@@ -10,101 +8,117 @@ import org.andengine.entity.sprite.Sprite;
 
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
 
 import com.ursarage.ouyamediator.IOuyaControllerListener;
+import com.ursarage.toolkit.Point;
+import com.ursarage.toolkit.Vector2;
 
 import tv.ouya.console.api.OuyaController;
 
 public class Gameboard extends Rectangle implements MusicMuncherDefines, IOuyaControllerListener {
-	
 
-	int numberOfCellsWidth;
-	int numberOfCellsHeight;
+
+	int mNumberOfColumns = 0;
+	int mNumberOfRows = 0;
 	
-	String scaleName;
-	private int totalNoteCount = 0;
+	String mScale;
+	private int mTotalNoteCount = 0;
 	
-	List<BoardPiece> pieces;
+	BoardPiece[][] pieces;
 	
 	public int score_ = 0;
 	
-	GameLevelScene level;
-	private Random random = new Random();
+	GameLevelScene mLevel;
+	private final Random random = new Random();
+    private Point mBoardPosition;
 	
-	public Gameboard(GameLevelScene levelScene, Camera camera, String scale )
-	{
-		super(0,0, camera.getSurfaceX(), camera.getSurfaceY(), levelScene.vertexBufferObjectManager);
+	public Gameboard(GameLevelScene level, Camera camera, String scale, Vector2 allocatedBoardAreaSize) {
+		super(0,0, camera.getSurfaceX(), camera.getSurfaceY(), level.vertexBufferObjectManager);
 		
-		level = levelScene;
-		scaleName = scale;
+		mLevel = level;
+		mScale = scale;
 
-		numberOfCellsWidth = ((int)camera.getWidth() - (levelScene.BOARD_PADDING_PERCENT*2)) / CELL_WIDTH;
-		numberOfCellsHeight = ((int)camera.getHeight() - (levelScene.BOARD_PADDING_PERCENT*2)) / CELL_HEIGHT;
+        mNumberOfColumns = (allocatedBoardAreaSize.X / CELL_WIDTH) - 2;
+		mNumberOfRows = (allocatedBoardAreaSize.Y / CELL_HEIGHT) -1;
+        Log.d("touch", "Width: " + mNumberOfColumns +    "-    Height: " + mNumberOfRows);
 
-        Log.d("touch", "Width: " + numberOfCellsWidth  +    "-    Height: " + numberOfCellsHeight);
-		
-		int gameboardWidth = levelScene.maxGameboardWidth - (levelScene.BOARD_PADDING_PERCENT*2);
-		int gameboardHeight = levelScene.maxGameboardHeight - (levelScene.BOARD_PADDING_PERCENT*2);
-		
-	    int initialBoardPositionX = levelScene.levelPaddingWidth;
-	    int initialBoardPositiony = levelScene.levelPaddingHeight;
-	      
-	    int pieceX = initialBoardPositionX;
-	    int pieceY = initialBoardPositiony;
+        pieces = new BoardPiece[mNumberOfColumns][mNumberOfRows];
+        for(int i = 0; i < mNumberOfColumns; i++)
+        {
+            for(int j = 0; j < mNumberOfRows; j++)
+            {
+              String note = chooseNote( scale );
+              BoardPiece piece = new BoardPiece(note, 0, 0, mLevel.resourcesManager.mBoardCell,
+                      mLevel.resourcesManager.levelText, this, mLevel.vertexBufferObjectManager);
+              pieces[i][j] = piece;
+              this.attachChild(piece);
+              level.registerTouchArea(piece);
+            }
+        }
 
-	    pieces = new ArrayList<BoardPiece>();
-		while( pieceX < gameboardWidth )
-		{
-			pieceY = initialBoardPositiony;
-			while(pieceY < gameboardHeight )
-			{
-			  String note = chooseNote( scale );
-			  BoardPiece piece = new BoardPiece(note, pieceX, pieceY, level.resourcesManager.mBoardCell,
-					  level.resourcesManager.levelText, this, level.vertexBufferObjectManager);
-			  pieces.add(piece);
-			  this.attachChild(piece);
-			  levelScene.registerTouchArea(piece);
-			  pieceY += CELL_HEIGHT - 2;
-			}
-			pieceX += CELL_WIDTH -2;
-		}
+        Vector2 actualBoardSize = new Vector2( mNumberOfColumns * BoardPiece.WIDTH_ADJUSTMENT,
+                                               mNumberOfRows * BoardPiece.HEIGHT_ADJUSTMENT );
+
+        final int boardPositionX = ((allocatedBoardAreaSize.X - actualBoardSize.X)/2) +
+                (int)(level.mScenePaddingSize.X *1.25);
+
+        final int boardPositionY = ((allocatedBoardAreaSize.Y - actualBoardSize.Y)) +
+                            (int)(level.mScenePaddingSize.Y / 1.5);
+
+        mBoardPosition = new Point( boardPositionX, boardPositionY);
+        this.setBoardPosition(mBoardPosition.X, mBoardPosition.Y);
+        Log.d("touch", "made board pieces...");
 
 		this.moveMuncher( randomBoardPiece() );
+        Log.d("touch", "moved the muncher");
 	}
-
 
 	public final int score() {
 		return this.score_;
 	}
+
+    public void setBoardPosition( int bottomLeftX, int bottomLeftY) {
+        int x = bottomLeftX;
+        int y = bottomLeftY;
+        for( int i = 0; i < this.mNumberOfColumns; i++ )
+        {
+            y = bottomLeftY;
+            for(int j = 0; j < mNumberOfRows; j++)
+            {
+                pieces[i][j].setPosition((float)x, (float)y);
+                y += BoardPiece.HEIGHT_ADJUSTMENT;
+            }
+            x += BoardPiece.WIDTH_ADJUSTMENT;
+        }
+    }
 	
 	public void onTouchEvent( BoardPiece pieceTouched ) {
-		if( this.isLocationSame(level.mMuncher, pieceTouched) && !pieceTouched.isClear() ) {
+		if( this.isLocationSame(mLevel.mMuncher, pieceTouched) && !pieceTouched.isClear() ) {
 			Log.w("touch", "Was same spot");
-			Log.w("touch", "ScaleName" + scaleName + " and board text " + pieceTouched.text() );
-			if( ScaleRepository.doesScaleContains(scaleName, pieceTouched.text()) )	{
+			Log.w("touch", "ScaleName" + mScale + " and board text " + pieceTouched.text() );
+			if( ScaleRepository.doesScaleContains(mScale, pieceTouched.text()) )	{
 				this.awardPoints();
 				Log.w("touch", "awwarded points");
-				totalNoteCount -= 1;
-				Log.w("touch", "Notes Left: " + totalNoteCount);
+				mTotalNoteCount -= 1;
+				Log.w("touch", "Notes Left: " + mTotalNoteCount);
 			}			
 			else{
 				Log.w("touch", "removed points");
 				this.removePoints();
 			}
 			
-			level.updateScoreDisplay();
+			mLevel.updateScoreDisplay();
 			
 			pieceTouched.clear();
-			if( totalNoteCount <= 0 )
+			if( mTotalNoteCount <= 0 )
 			{
 				Log.w("touch", "GAME OVER!!!");
-				level.levelComplete();
+				mLevel.levelComplete();
 			}
 				
 		}
 
-		if( this.isAdjacent(level.mMuncher, pieceTouched) )
+		if( this.isAdjacent(mLevel.mMuncher, pieceTouched) )
 		{
 			this.moveMuncher(pieceTouched);
 		}
@@ -152,28 +166,28 @@ public class Gameboard extends Rectangle implements MusicMuncherDefines, IOuyaCo
 	}
 	
 	private void moveMuncher( final BoardPiece pieceTouched ) {
-		level.mMuncher.setPosition(pieceTouched.getX(), pieceTouched.getY());	
+		mLevel.mMuncher.setPosition(pieceTouched.getX(), pieceTouched.getY());
 	}
 	
-	private String chooseNote( String scale ) {
+	private String chooseNote( final String scale ) {
 		if( random.nextInt(1) == 1 ){
-            totalNoteCount += 1;
+            mTotalNoteCount += 1;
             return ScaleRepository.RandomNote(scale);
         }
 
 		return ScaleRepository.RandomNote();
 	}
 	
-	private boolean isLocationSame( Sprite firstSprite, Sprite secondSprite ) {
+	private boolean isLocationSame( final Sprite firstSprite, final Sprite secondSprite ) {
 		
 		Log.w("touch", "SpriteOne(" +firstSprite.getX() + "," +firstSprite.getY() + ") SpriteTwo(" +secondSprite.getX() +"," + secondSprite.getY()+ ")");
 		return ( firstSprite.getX()==secondSprite.getX() && 
 				firstSprite.getY()==secondSprite.getY() );
 	}
 
-    private final BoardPiece  randomBoardPiece() {
-        int randomCellIndex = random.nextInt(pieces.size() + 1);
-        return pieces.get(randomCellIndex);
+    private final BoardPiece randomBoardPiece() {
+        Point cellIndex = new Point( random.nextInt(pieces.length), random.nextInt(pieces[0].length));
+        return pieces[cellIndex.X][cellIndex.Y];
     }
 
 }

@@ -17,17 +17,22 @@ public class BoardPiece extends Sprite implements MusicMuncherDefines {
 	
 	// The parent board which displays the board pieces.
 	Gameboard mBoard;
+
+    static int WIDTH_ADJUSTMENT = CELL_WIDTH - 2;
+    static int HEIGHT_ADJUSTMENT = CELL_HEIGHT -2;
 	
-	public BoardPiece( String text, int x, int y, ITextureRegion texture, IFont font, Gameboard board, VertexBufferObjectManager manager )
-	{
+	public BoardPiece( String text, int x, int y, ITextureRegion texture, IFont font, Gameboard board, VertexBufferObjectManager manager ) {
 		super(x, y, texture, manager);
+
 		mNote = text;
-		int noteOffset =  CELL_WIDTH/2;
-		mText = new Text( 1+ noteOffset - (FontUtils.measureText(font, text)/2), 2 + noteOffset - (font.getLineHeight()/2), font, text, manager );
-		
-		mBoard = board;
-		
-		this.attachChild(mText);
+        mBoard = board;
+
+		float noteOffset =  CELL_WIDTH/2.0f;
+
+        // Magic numbers below help tweek the position to seem more int he center
+		mText = new Text( x + noteOffset - 1, y + noteOffset -2 , font, text, manager );
+
+        this.attachChild(mText);
 	}
 	
 	@Override

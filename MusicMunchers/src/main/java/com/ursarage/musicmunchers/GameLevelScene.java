@@ -8,8 +8,7 @@ import android.util.Log;
 
 import com.ursarage.musicmunchers.SceneManager.SceneType;
 import com.ursarage.toolkit.Point;
-
-import com.ursarage.toolkit.Point;
+import com.ursarage.toolkit.Vector2;
 
 public class GameLevelScene extends BaseScene {
 
@@ -20,26 +19,20 @@ public class GameLevelScene extends BaseScene {
 	
 	private String mScaleName;
 	
-	private Gameboard board;
+	private Gameboard mBoard;
 	public Sprite mMuncher;
-
-    int headerPixelSize;
 
     final public int BOARD_PADDING_PERCENT = 10;
 
-    public int levelPaddingWidth;
-    public int levelPaddingHeight;
-
-    public int maxGameboardHeight;
-    public int maxGameboardWidth;
+    public Vector2 mScenePaddingSize;
+    public Vector2 mAllocatedBoardArea;
 
     @Override
 	public void createScene() {
 		
-		Log.w("touch", "Creating game level scene Game");
-		
+		Log.w("touch", "Creating game mLevel scene Game");
+
 		mScaleName = new String("C");
-		
 		Log.w("touch", "Made Scale name");
 
 		this.mHud = new HUD();
@@ -51,23 +44,32 @@ public class GameLevelScene extends BaseScene {
 		mMuncher = new Sprite(0, 0, resourcesManager.mMuncherTextureRegion, this.vertexBufferObjectManager);
 		Log.w("touch", "made muncher");
 
-		levelPaddingWidth = (int)camera.getWidth() / BOARD_PADDING_PERCENT;
-        levelPaddingHeight = (int)camera.getHeight() / BOARD_PADDING_PERCENT;
+		mScenePaddingSize = new Vector2( (int)camera.getWidth() / BOARD_PADDING_PERCENT,
+                                         (int)camera.getHeight() / BOARD_PADDING_PERCENT );
 
-        final Point scoreLocation = new Point( levelPaddingWidth, ((int)camera.getHeight()-levelPaddingHeight) );
-        final Point titleLocation = new Point( (int)camera.getWidth()/2, scoreLocation.Y - (levelPaddingHeight/2));
+        final Point scoreLocation = new Point(mScenePaddingSize.X,
+                    ((int)camera.getHeight()- mScenePaddingSize.X) );
 
-        maxGameboardWidth = (int)camera.getWidth();
-        maxGameboardHeight = titleLocation.Y - (levelPaddingHeight/2);
+        final Point titleCenterLocation = new Point( (int)camera.getWidth()/2,
+                    scoreLocation.Y - (mScenePaddingSize.Y /2));
 
-        board = new Gameboard( this, camera, mScaleName );
-        resourcesManager.ouya.registerListener(board);
+        this.mScoreText = new Text(scoreLocation.X, scoreLocation.Y, resourcesManager.levelText,
+                "Score: " + 0, "Score: XXXX".length(), this.vertexBufferObjectManager);
+
+        this.mTitleText = new Text(titleCenterLocation.X, titleCenterLocation.Y,
+                resourcesManager.levelText, mScaleName + " Scale", "XX Scale".length(), this.vertexBufferObjectManager);
+        this.mTitleText.setPosition( titleCenterLocation.X - (this.mTitleText.getWidth()/2) + 15,
+                titleCenterLocation.Y - (this.mTitleText.getHeight()/2) );
+
+        mAllocatedBoardArea = new Vector2( (int)camera.getWidth() -(mScenePaddingSize.X *2),
+                                            titleCenterLocation.Y - (mScenePaddingSize.Y /2));
+
+        Log.d("touch", "MaxBoardWidth: " + mAllocatedBoardArea.X +
+                "-    MaxBoardHeight: " + mAllocatedBoardArea.Y);
+
+        mBoard = new Gameboard( this, camera, mScaleName, mAllocatedBoardArea );
+        resourcesManager.ouya.registerListener(mBoard);
         Log.w("touch", "made gameboard");
-
-		this.mScoreText = new Text(scoreLocation.X, scoreLocation.Y, resourcesManager.levelText, "Score: " + board.score(), "Score: XXXX".length(), this.vertexBufferObjectManager);
-		
-		Log.w("touch", "Created SCORE TEXT");
-		this.mTitleText = new Text(titleLocation.X, titleLocation.Y, resourcesManager.levelText, mScaleName + " Scale", "XX Scale".length(), this.vertexBufferObjectManager);
 
 		this.mHud.attachChild(this.mScoreText);
 		this.mHud.attachChild(this.mTitleText);
@@ -75,7 +77,7 @@ public class GameLevelScene extends BaseScene {
 		Log.w("touch", "Loaded HUD");
 
 
-        attachChild(board);
+        attachChild(mBoard);
 		attachChild(mMuncher);
 	}
 	
@@ -86,7 +88,7 @@ public class GameLevelScene extends BaseScene {
 	
 
 	public void updateScoreDisplay() {
-		this.mScoreText.setText("Score: " + this.board.score());
+		this.mScoreText.setText("Score: " + this.mBoard.score());
 	}
 	
 
@@ -103,7 +105,7 @@ public class GameLevelScene extends BaseScene {
 
 	@Override
 	public void disposeScene() {
-		resourcesManager.ouya.unregisterListener(board);
+		resourcesManager.ouya.unregisterListener(mBoard);
 	}
 
 }
