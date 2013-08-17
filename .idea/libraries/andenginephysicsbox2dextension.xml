@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="andenginephysicsbox2dextension">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/MusicMunchers/libs/andenginephysicsbox2dextension.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
