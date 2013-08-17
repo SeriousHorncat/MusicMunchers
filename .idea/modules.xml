@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/MusicMunchers/MusicMunchers.iml" filepath="$PROJECT_DIR$/MusicMunchers/MusicMunchers.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MusicMunchers-android/MusicMunchers-android.iml" filepath="$PROJECT_DIR$/MusicMunchers-android/MusicMunchers-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MusicMunchers-desktop/MusicMunchers-desktop.iml" filepath="$PROJECT_DIR$/MusicMunchers-desktop/MusicMunchers-desktop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MusicMunchers-html/MusicMunchers-html.iml" filepath="$PROJECT_DIR$/MusicMunchers-html/MusicMunchers-html.iml" />
+    </modules>
+  </component>
+</project>
+
