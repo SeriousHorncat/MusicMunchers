@@ -8,4 +8,5 @@ import android.view.KeyEvent;
  */
 public interface IOuyaControllerListener {
         public boolean onKeyDown(int keyCode, android.view.KeyEvent event);
+        public boolean onKeyUp(int keyCode, KeyEvent event);
 }

@@ -10,10 +10,13 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
 import android.util.Log;
 
+import com.ursarage.toolkit.Vector2;
+
 public class BoardPiece extends Sprite implements MusicMuncherDefines {
 	
 	Text mText;
 	String mNote;
+    Vector2 mBoardIndex;
 	
 	// The parent board which displays the board pieces.
 	Gameboard mBoard;
@@ -21,11 +24,12 @@ public class BoardPiece extends Sprite implements MusicMuncherDefines {
     static int WIDTH_ADJUSTMENT = CELL_WIDTH - 2;
     static int HEIGHT_ADJUSTMENT = CELL_HEIGHT -2;
 	
-	public BoardPiece( String text, int x, int y, ITextureRegion texture, IFont font, Gameboard board, VertexBufferObjectManager manager ) {
+	public BoardPiece( String text, int x, int y, ITextureRegion texture, IFont font, Gameboard board, VertexBufferObjectManager manager, Vector2 boardIndex ) {
 		super(x, y, texture, manager);
 
 		mNote = text;
         mBoard = board;
+        mBoardIndex = boardIndex;
 
 		float noteOffset =  CELL_WIDTH/2.0f;
 
@@ -34,6 +38,10 @@ public class BoardPiece extends Sprite implements MusicMuncherDefines {
 
         this.attachChild(mText);
 	}
+
+    public final Vector2 boardIndexLocation() {
+        return mBoardIndex;
+    }
 	
 	@Override
 	public boolean onAreaTouched( final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {

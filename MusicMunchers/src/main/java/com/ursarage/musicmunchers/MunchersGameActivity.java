@@ -18,6 +18,9 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.ursarage.ouyamediator.OuyaMediator;
+
+import tv.ouya.console.api.OuyaController;
+
 /**
  * (c) 2013 Ursa Rage
  *
@@ -125,12 +128,26 @@ public class MunchersGameActivity extends BaseGameActivity implements  MusicMunc
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
-        mOuyaMediator.onKeyDown(keyCode, event);
+       // mOuyaMediator.onKeyDown(keyCode, event);
         if (keyCode == KeyEvent.KEYCODE_BACK)
         {
             SceneManager.getInstance().getCurrentScene().onBackKeyPressed();
         }
+        else if( OuyaMediator.isOuyaControllerDPad(keyCode) )
+        {
+            SceneManager.getInstance().getCurrentScene().onDPadPressed(keyCode, event);
+        }
+        else if( OuyaMediator.isOuyaControllerButtonPad(keyCode) ) {
+            SceneManager.getInstance().getCurrentScene().onButtonPadPressed(keyCode, event);
+        }
         return false;
     }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+       // mOuyaMediator.onKeyUp(keyCode, event);
+        return false;
+    }
+
 
 }

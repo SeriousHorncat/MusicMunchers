@@ -1,16 +1,16 @@
 package com.ursarage.musicmunchers;
 
-import java.util.Random;
-
-import org.andengine.engine.camera.Camera;
-import org.andengine.entity.primitive.Rectangle;
-import org.andengine.entity.sprite.Sprite;
-
 import android.util.Log;
 import android.view.KeyEvent;
 
 import com.ursarage.toolkit.Point;
 import com.ursarage.toolkit.Vector2;
+
+import org.andengine.engine.camera.Camera;
+import org.andengine.entity.primitive.Rectangle;
+import org.andengine.entity.sprite.Sprite;
+
+import java.util.Random;
 
 import tv.ouya.console.api.OuyaController;
 
@@ -23,7 +23,7 @@ public class Gameboard extends Rectangle implements MusicMuncherDefines {
 	String mScale;
 	private int mTotalNoteCount = 0;
 
-	
+
 	BoardPiece[][] pieces;
 	
 	public int score_ = 0;
@@ -36,12 +36,12 @@ public class Gameboard extends Rectangle implements MusicMuncherDefines {
 	
 	public Gameboard(GameLevelScene level, Camera camera, String scale, Vector2 allocatedBoardAreaSize) {
 		super(0,0, camera.getSurfaceX(), camera.getSurfaceY(), level.vertexBufferObjectManager);
-		
+
 		mLevel = level;
 		mScale = scale;
         mMuncherBoardLocation = new Vector2(0,0);
 
-        mNumberOfColumns = (allocatedBoardAreaSize.X / CELL_WIDTH) - 2;
+    mNumberOfColumns = (allocatedBoardAreaSize.X / CELL_WIDTH) - 2;
 		mNumberOfRows = (allocatedBoardAreaSize.Y / CELL_HEIGHT) -1;
         Log.d("touch", "Width: " + mNumberOfColumns +    "-    Height: " + mNumberOfRows);
 

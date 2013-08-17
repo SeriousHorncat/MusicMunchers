@@ -5,6 +5,7 @@ import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 
 import android.util.Log;
+import android.view.KeyEvent;
 
 import com.ursarage.musicmunchers.SceneManager.SceneType;
 import com.ursarage.toolkit.Point;
@@ -68,7 +69,6 @@ public class GameLevelScene extends BaseScene {
                 "-    MaxBoardHeight: " + mAllocatedBoardArea.Y);
 
         mBoard = new Gameboard( this, camera, mScaleName, mAllocatedBoardArea );
-        resourcesManager.ouya.registerListener(mBoard);
         Log.w("touch", "made gameboard");
 
 		this.mHud.attachChild(this.mScoreText);
@@ -79,7 +79,8 @@ public class GameLevelScene extends BaseScene {
 
         attachChild(mBoard);
 		attachChild(mMuncher);
-	}
+        //resourcesManager.ouya.registerListener(mBoard);
+    }
 	
 	public void levelComplete()
 	{
@@ -98,14 +99,25 @@ public class GameLevelScene extends BaseScene {
 
 	}
 
-	@Override
+    @Override
+    public void onDPadPressed(int keyCode, KeyEvent event) {
+        mBoard.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    public void onButtonPadPressed(int keyCode, KeyEvent event) {
+        mBoard.onKeyUp(keyCode, event);
+    }
+
+
+    @Override
 	public SceneType getSceneType() {
 		return SceneType.SCENE_GAME;
 	}
 
 	@Override
 	public void disposeScene() {
-		resourcesManager.ouya.unregisterListener(mBoard);
+		//resourcesManager.ouya.unregisterListener(mBoard);
 	}
 
 }

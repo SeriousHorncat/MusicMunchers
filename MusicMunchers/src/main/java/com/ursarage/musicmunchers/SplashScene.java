@@ -1,5 +1,7 @@
 package com.ursarage.musicmunchers;
 
+import android.view.KeyEvent;
+
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.util.GLState;
@@ -33,7 +35,18 @@ public class SplashScene extends BaseScene {
 
 	}
 
-	@Override
+    @Override
+    public void onDPadPressed(int keyCode, KeyEvent event) {
+
+    }
+
+    @Override
+    public void onButtonPadPressed(int keyCode, KeyEvent event) {
+
+    }
+
+
+    @Override
 	public SceneType getSceneType() {
 		return SceneType.SCENE_SPLASH;
 	}

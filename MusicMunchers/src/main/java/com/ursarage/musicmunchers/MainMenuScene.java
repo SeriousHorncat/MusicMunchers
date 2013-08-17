@@ -16,7 +16,7 @@ import com.ursarage.ouyamediator.IOuyaControllerListener;
 import android.util.Log;
 import android.view.KeyEvent;
 
-public class MainMenuScene extends BaseScene  implements IOnMenuItemClickListener, IOuyaControllerListener {
+public class MainMenuScene extends BaseScene  implements IOnMenuItemClickListener {
 
 	private Text titleText;
 	
@@ -45,7 +45,7 @@ public class MainMenuScene extends BaseScene  implements IOnMenuItemClickListene
         attachChild(mMuncher);
         if( resourcesManager.ouya.isRunningOnOUYAHardware())
         {
-            resourcesManager.ouya.registerListener(this);
+            //resourcesManager.ouya.registerListener(this);
         }
         Log.d("touch", "is it crashing here?");
      }
@@ -55,7 +55,18 @@ public class MainMenuScene extends BaseScene  implements IOnMenuItemClickListene
 		System.exit(0);
 	}
 
-	@Override
+    @Override
+    public void onDPadPressed(int keyCode, KeyEvent event) {
+
+    }
+
+    @Override
+    public void onButtonPadPressed(int keyCode, KeyEvent event) {
+        this.onKeyDown(keyCode, event);
+    }
+
+
+    @Override
 	public SceneType getSceneType() {
 		return SceneType.SCENE_MENU;
 	}
@@ -77,13 +88,16 @@ public class MainMenuScene extends BaseScene  implements IOnMenuItemClickListene
 		}
 	}
 
-    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if( SceneManager.getInstance().getCurrentSceneType() == getSceneType()) {
             SceneManager.getInstance().loadGameScene(engine);
             return true;
         }
 
+        return false;
+    }
+
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
         return false;
     }
 

@@ -3,6 +3,7 @@ package com.ursarage.musicmunchers;
 import org.andengine.entity.text.Text;
 
 import android.util.Log;
+import android.view.KeyEvent;
 
 import com.ursarage.musicmunchers.SceneManager.SceneType;
 
@@ -25,15 +26,24 @@ public class WinScene extends BaseScene {
 
 	}
 
-	@Override
+    @Override
+    public void onDPadPressed(int keyCode, KeyEvent event) {
+
+    }
+
+    @Override
+    public void onButtonPadPressed(int keyCode, KeyEvent event) {
+
+    }
+
+
+    @Override
 	public SceneType getSceneType() {
 		return SceneType.SCENE_WIN;
 	}
 
 	@Override
 	public void disposeScene() {
-		// TODO Auto-generated method stub
-
 	}
 
 }

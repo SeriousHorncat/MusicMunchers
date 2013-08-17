@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import tv.ouya.console.api.OuyaController;
 import tv.ouya.console.api.OuyaFacade;
 
 /**
@@ -46,6 +47,31 @@ public class OuyaMediator {
         }
 
         return true;
+    }
+
+    public boolean onKeyUp(int keyCode, android.view.KeyEvent event)
+    {
+        Log.d("touch", "onkeydown in controller thingy");
+        for(Iterator<IOuyaControllerListener> i = controllerLisetners.iterator(); i.hasNext(); ) {
+            IOuyaControllerListener item = i.next();
+            item.onKeyUp(keyCode, event);
+        }
+
+        return true;
+    }
+
+    public static final boolean isOuyaControllerDPad(int keyEvent) {
+        return ( keyEvent == OuyaController.BUTTON_DPAD_DOWN ||
+                keyEvent == OuyaController.BUTTON_DPAD_UP ||
+                keyEvent == OuyaController.BUTTON_DPAD_LEFT ||
+                keyEvent == OuyaController.BUTTON_DPAD_RIGHT );
+    }
+
+    public static final boolean isOuyaControllerButtonPad(int keyEvent) {
+        return ( keyEvent == OuyaController.BUTTON_A ||
+                keyEvent == OuyaController.BUTTON_O ||
+                keyEvent == OuyaController.BUTTON_Y ||
+                keyEvent == OuyaController.BUTTON_U );
     }
 
 }
