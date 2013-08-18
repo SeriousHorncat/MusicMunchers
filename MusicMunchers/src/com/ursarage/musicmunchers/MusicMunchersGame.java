@@ -16,7 +16,7 @@ public class MusicMunchersGame extends Game implements InputProcessor {
 
 	@Override
 	public void create() {
-    font = new BitmapFont();
+    font = new BitmapFont(Gdx.files.internal("font/dosgreen.txt"), false);
     batch = new SpriteBatch();
 
     resourceManager = resourceManager.getInstance();
